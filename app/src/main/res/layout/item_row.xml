@@ -1,0 +1,51 @@
+<!-- res/layout/item_row.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/expiryDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameTextView"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/daysLeftTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expiryDateTextView"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/daysLeftTextView"
+        android:text="Delete" />
+
+    <View
+        android:id="@+id/whiteview"
+        android:layout_below="@id/deleteButton"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/white"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_below="@id/whiteview"
+        android:layout_height="4dp"
+        android:background="#cccccc"/>
+</RelativeLayout>
