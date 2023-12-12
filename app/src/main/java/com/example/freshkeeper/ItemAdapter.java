@@ -101,4 +101,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         });
         notifyDataSetChanged();
     }
+
+
+
 }

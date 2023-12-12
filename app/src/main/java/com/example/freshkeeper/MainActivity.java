@@ -3,6 +3,8 @@ package com.example.freshkeeper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -90,4 +92,15 @@ public class MainActivity extends AppCompatActivity {
         );
         datePickerDialog.show();
     }
+
+    public void performSearch(View view) {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_item, null);
+        EditText nameEditText = dialogView.findViewById(R.id.nameEditText);
+        String itemName = nameEditText.getText().toString();
+        String item = itemName + "几天会过期";
+        Uri searchUri = Uri.parse("https://www.google.com/search?q=" + Uri.encode(item));
+        Intent intent = new Intent(Intent.ACTION_VIEW, searchUri);
+        startActivity(intent);
+    }
+
 }
