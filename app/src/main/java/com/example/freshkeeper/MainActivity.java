@@ -2,7 +2,9 @@ package com.example.freshkeeper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -55,6 +57,27 @@ public class MainActivity extends AppCompatActivity {
                 showAddItemDialog();
             }
         });
+    }
+
+    private void setAlarmForBackgroundTask() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        Intent intent = new Intent(this, MyBackgroundService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+            );
+        }
     }
 
     private void showAddItemDialog() {
