@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,8 +21,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+//todo: 定期触发、数据库、拍照识别
 
 public class MainActivity extends AppCompatActivity {
+    private MyDbHelper dbHelper;
+    private SQLiteDatabase db;
 
     private List<Item> items;
     private ItemAdapter itemAdapter;
@@ -31,12 +35,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbHelper = new MyDbHelper(this);
+        db = dbHelper.getWritableDatabase();
+
         items = new ArrayList<>();
         itemAdapter = new ItemAdapter(items);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(itemAdapter);
+
+        items.addAll(Item.readAllItemsFromDatabase(db));
+        itemAdapter.notifyDataSetChanged();
+        itemAdapter.sortItems();
 
         findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
                     String expiryDate = expiryDateEditText.getText().toString();
                     String startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                     Item newItem = new Item(name, expiryDate, startDate);
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    long itemId = newItem.insertIntoDatabase(db);
                     items.add(newItem);
                     itemAdapter.notifyDataSetChanged();
                     itemAdapter.sortItems();
@@ -98,9 +111,18 @@ public class MainActivity extends AppCompatActivity {
         EditText nameEditText = dialogView.findViewById(R.id.nameEditText);
         String itemName = nameEditText.getText().toString();
         String item = itemName + "几天会过期";
-        Uri searchUri = Uri.parse("https://www.google.com/search?q=" + Uri.encode(item));
+        Uri searchUri = Uri.parse("https://www.bing.com/search?q=" + Uri.encode(item));
         Intent intent = new Intent(Intent.ACTION_VIEW, searchUri);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 关闭数据库连接
+        if (db != null) {
+            db.close();
+        }
     }
 
 }
